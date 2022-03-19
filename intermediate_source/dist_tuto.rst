@@ -8,7 +8,7 @@ Prerequisites:
 
 In this short tutorial, we will be going over the distributed package
 of PyTorch. We'll see how to set up the distributed setting, use the
-different communication strategies, and go over some the internals of
+different communication strategies, and go over some of the internals of
 the package.
 
 Setup
@@ -147,7 +147,7 @@ return a ``Work`` object upon which we can choose to
         req.wait()
         print('Rank ', rank, ' has data ', tensor[0])
 
-When using immediates we have to be careful about with our usage of the sent and received tensors.
+When using immediates we have to be careful about how we use the sent and received tensors.
 Since we do not know when the data will be communicated to the other process,
 we should not modify the sent tensor nor access the received tensor before ``req.wait()`` has completed.
 In other words,
@@ -159,7 +159,7 @@ However, after ``req.wait()``
 has been executed we are guaranteed that the communication took place,
 and that the value stored in ``tensor[0]`` is 1.0.
 
-Point-to-point communication is useful when we want a fine-grained
+Point-to-point communication is useful when we want more fine-grained
 control over the communication of our processes. They can be used to
 implement fancy algorithms, such as the one used in `Baidu's
 DeepSpeech <https://github.com/baidu-research/baidu-allreduce>`__ or
@@ -199,8 +199,8 @@ As opposed to point-to-point communcation, collectives allow for
 communication patterns across all processes in a **group**. A group is a
 subset of all our processes. To create a group, we can pass a list of
 ranks to ``dist.new_group(group)``. By default, collectives are executed
-on the all processes, also known as the **world**. For example, in order
-to obtain the sum of all tensors at all processes, we can use the
+on all processes, also known as the **world**. For example, in order
+to obtain the sum of all tensors on all processes, we can use the
 ``dist.all_reduce(tensor, op, group)`` collective.
 
 .. code:: python
@@ -229,7 +229,7 @@ of 6 collectives currently implemented in PyTorch.
 
 -  ``dist.broadcast(tensor, src, group)``: Copies ``tensor`` from
    ``src`` to all other processes.
--  ``dist.reduce(tensor, dst, op, group)``: Applies ``op`` to all
+-  ``dist.reduce(tensor, dst, op, group)``: Applies ``op`` to every
    ``tensor`` and stores the result in ``dst``.
 -  ``dist.all_reduce(tensor, op, group)``: Same as reduce, but the
    result is stored in all processes.
